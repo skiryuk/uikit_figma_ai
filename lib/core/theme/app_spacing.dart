@@ -3,7 +3,7 @@ class AppSpacing {
   AppSpacing._();
 
   // ============================================
-  // Spacing Values - Значения отступов
+  // Base Spacing Values - Базовые значения отступов
   // ============================================
   
   /// Spacing 0 - нулевой отступ
@@ -35,5 +35,29 @@ class AppSpacing {
   
   /// Spacing 32 - максимальный отступ
   static const double spacing32 = 32.0;
+
+  // ============================================
+  // Spacing Tokens - Семантические токены отступов
+  // (из SpacingTokens.tokens.json, с переиспользованием
+  // базовых значений выше)
+  // ============================================
+
+  /// space-x1 — alias для базового значения 4
+  static const double spaceX1 = spacing4;
+
+  /// space-x2 — alias для базового значения 8
+  static const double spaceX2 = spacing8;
+
+  /// space-x3 — alias для базового значения 10
+  static const double spaceX3 = spacing10;
+
+  /// space-x4 — alias для базового значения 12
+  static const double spaceX4 = spacing12;
+
+  /// space-x5 — alias для базового значения 16
+  static const double spaceX5 = spacing16;
+
+  /// space-x6 — alias для базового значения 20
+  static const double spaceX6 = spacing20;
 }
 
