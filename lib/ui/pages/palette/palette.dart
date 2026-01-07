@@ -34,31 +34,36 @@ class PalettePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _buildColorSection(
-              'White Colors',
-              [
-                ('White Main', AppColors.whiteMain),
-                ('White 600', AppColors.white600),
-                ('White 500', AppColors.white500),
-                ('White 400', AppColors.white400),
-                ('White 300', AppColors.white300),
-                ('White 200', AppColors.white200),
-                ('White 100', AppColors.white100),
-              ],
-            ),
-            const SizedBox(height: 24),
-            _buildColorSection(
-              'Black Colors',
-              [
-                ('Black Main', AppColors.blackMain),
-                ('Black 600', AppColors.black600),
-                ('Black 500', AppColors.black500),
-                ('Black 400', AppColors.black400),
-                ('Black 300', AppColors.black300),
-                ('Black 200', AppColors.black200),
-                ('Black 100', AppColors.black100),
-              ],
-            ),
+            if (!themeProvider.isDarkMode) ...[
+              _buildColorSection(
+                'Black Colors',
+                [
+                  ('Black Main', AppColors.blackMain),
+                  ('Black 600', AppColors.black600),
+                  ('Black 500', AppColors.black500),
+                  ('Black 400', AppColors.black400),
+                  ('Black 300', AppColors.black300),
+                  ('Black 200', AppColors.black200),
+                  ('Black 100', AppColors.black100),
+                ],
+              ),
+              const SizedBox(height: 24),
+            ],
+            if (themeProvider.isDarkMode) ...[
+              _buildColorSection(
+                'White Colors',
+                [
+                  ('White Main', AppColors.whiteMain),
+                  ('White 600', AppColors.white600),
+                  ('White 500', AppColors.white500),
+                  ('White 400', AppColors.white400),
+                  ('White 300', AppColors.white300),
+                  ('White 200', AppColors.white200),
+                  ('White 100', AppColors.white100),
+                ],
+              ),
+              const SizedBox(height: 24),
+            ],
             const SizedBox(height: 24),
             _buildColorSection(
               'Blue Colors',
@@ -185,7 +190,7 @@ class PalettePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '#${(color.value & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}',
+                    _getColorHexWithAlpha(color),
                     style: AppTextStyles.smallRegular.copyWith(color: textColor),
                   ),
                 ],
@@ -253,5 +258,19 @@ class PalettePage extends StatelessWidget {
         ...tokens.map((token) => _buildColorItem(token.$1, token.$2)),
       ],
     );
+  }
+
+  /// Получить hex-код цвета с альфа-каналом в формате #AARRGGBB
+  String _getColorHexWithAlpha(Color color) {
+    final value = color.value;
+    final alpha = (value >> 24) & 0xFF;
+    final red = (value >> 16) & 0xFF;
+    final green = (value >> 8) & 0xFF;
+    final blue = value & 0xFF;
+    
+    return '#${alpha.toRadixString(16).padLeft(2, '0').toUpperCase()}'
+        '${red.toRadixString(16).padLeft(2, '0').toUpperCase()}'
+        '${green.toRadixString(16).padLeft(2, '0').toUpperCase()}'
+        '${blue.toRadixString(16).padLeft(2, '0').toUpperCase()}';
   }
 }
