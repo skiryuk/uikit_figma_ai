@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import '../../../core/theme/app_theme.dart';
 import '../typography/typography.dart';
 import '../palette/palette.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final AppThemeProvider themeProvider;
+
+  const HomePage({super.key, required this.themeProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -11,23 +14,23 @@ class HomePage extends StatelessWidget {
       tabBar: CupertinoTabBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.textformat),
-            label: 'Typography',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.paintbrush),
             label: 'Palette',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.textformat),
+            label: 'Typography',
           ),
         ],
       ),
       tabBuilder: (context, index) {
         switch (index) {
           case 0:
-            return const TypographyPage();
+            return PalettePage(themeProvider: themeProvider);
           case 1:
-            return const PalettePage();
+            return TypographyPage(themeProvider: themeProvider);
           default:
-            return const TypographyPage();
+            return PalettePage(themeProvider: themeProvider);
         }
       },
     );
