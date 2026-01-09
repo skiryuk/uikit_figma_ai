@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import '../../../core/theme/app_theme.dart';
 import '../typography/typography.dart';
 import '../palette/palette.dart';
+import '../buttons/buttons.dart';
 
 class HomePage extends StatelessWidget {
   final AppThemeProvider themeProvider;
@@ -21,6 +22,10 @@ class HomePage extends StatelessWidget {
             icon: Icon(CupertinoIcons.textformat),
             label: 'Typography',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.square_grid_2x2),
+            label: 'Buttons',
+          ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -29,6 +34,8 @@ class HomePage extends StatelessWidget {
             return PalettePage(themeProvider: themeProvider);
           case 1:
             return TypographyPage(themeProvider: themeProvider);
+          case 2:
+            return ButtonsPage(themeProvider: themeProvider);
           default:
             return PalettePage(themeProvider: themeProvider);
         }
