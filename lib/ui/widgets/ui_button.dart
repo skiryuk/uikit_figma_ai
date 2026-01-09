@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/app_text_styles_web.dart';
 import '../../core/theme/app_theme.dart';
 
 /// Вариант состояния кнопки
@@ -281,11 +283,21 @@ class UiButton extends StatelessWidget {
 
   /// Получить стиль текста в зависимости от размера
   TextStyle _getTextStyle() {
-    switch (size) {
-      case UiButtonSize.m:
-        return AppTextStyles.bodyMedium;
-      case UiButtonSize.s:
-        return AppTextStyles.smallMedium;
+    // Для веба используем AppTextStylesWeb, для мобильных - AppTextStyles
+    if (kIsWeb) {
+      switch (size) {
+        case UiButtonSize.m:
+          return AppTextStylesWeb.bodyMedium;
+        case UiButtonSize.s:
+          return AppTextStylesWeb.smallMedium;
+      }
+    } else {
+      switch (size) {
+        case UiButtonSize.m:
+          return AppTextStyles.bodyMedium;
+        case UiButtonSize.s:
+          return AppTextStyles.smallMedium;
+      }
     }
   }
 

@@ -9,7 +9,8 @@ class AppTypography {
   // ============================================
   
   /// Font Sans - основное семейство шрифтов
-  static const String fontSans = 'Roboto';
+  /// Для веба используется Google Fonts 'Roboto', для мобильных - 'RobotoLocal'
+  static const String fontSans = 'RobotoLocal';
 
   // ============================================
   // Font Weights - Насыщенность шрифта

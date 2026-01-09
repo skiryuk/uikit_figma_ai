@@ -14,6 +14,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  google_fonts: ^7.0.0
 
 dev_dependencies:
   flutter_test:
@@ -68,9 +69,10 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
-  # Custom fonts - Roboto
+  # Custom fonts - Roboto (только для мобильных платформ, для веба используем Google Fonts)
+  # Для веба шрифты загружаются через Google Fonts, чтобы избежать конфликтов
   fonts:
-    - family: Roboto
+    - family: RobotoLocal
       fonts:
         - asset: fonts/Roboto-Regular.ttf
           weight: 400
