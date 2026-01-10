@@ -27,6 +27,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  golden_toolkit: ^0.15.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -75,9 +76,9 @@ flutter:
   fonts:
     - family: RobotoLocal
       fonts:
-        - asset: fonts/Roboto-Regular.ttf
+        - asset: lib/fonts/Roboto-Regular.ttf
           weight: 400
-        - asset: fonts/Roboto-Medium.ttf
+        - asset: lib/fonts/Roboto-Medium.ttf
           weight: 500
-        - asset: fonts/Roboto-Bold.ttf
+        - asset: lib/fonts/Roboto-Bold.ttf
           weight: 700

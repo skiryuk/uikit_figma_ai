@@ -125,7 +125,10 @@ class UiButton extends StatelessWidget {
         if (text != null)
           Text(
             text!,
-            style: textStyle.copyWith(color: colors.textColor),
+            style: textStyle.copyWith(
+              color: colors.textColor,
+              fontFamily: textStyle.fontFamily, // Явно сохраняем fontFamily
+            ),
           ),
         if (rightIcon != null) ...[
           if (text != null) SizedBox(width: AppSpacing.spacing4),
