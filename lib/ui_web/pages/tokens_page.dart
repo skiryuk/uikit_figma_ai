@@ -6,40 +6,97 @@ import '../../core/theme/app_typography.dart';
 import '../../core/theme/app_text_styles_web.dart';
 import '../../core/theme/app_theme_tokens.dart';
 
-class TokensPage extends StatelessWidget {
+class TokensPage extends StatefulWidget {
   final AppThemeProvider themeProvider;
 
   const TokensPage({super.key, required this.themeProvider});
 
   @override
+  State<TokensPage> createState() => _TokensPageState();
+}
+
+class _TokensPageState extends State<TokensPage> {
+  final Map<String, bool> _expandedGroups = {};
+
+  @override
+  void initState() {
+    super.initState();
+    // По умолчанию все группы развернуты
+    _expandedGroups['Black Colors'] = true;
+    _expandedGroups['White Colors'] = true;
+    _expandedGroups['Blue Colors'] = true;
+    _expandedGroups['Red Colors'] = true;
+    _expandedGroups['Orange Colors'] = true;
+    _expandedGroups['Green Colors'] = true;
+    _expandedGroups['Font Family'] = true;
+    _expandedGroups['Font Weights'] = true;
+    _expandedGroups['Font Sizes'] = true;
+    _expandedGroups['Text Colors'] = true;
+    _expandedGroups['Border Colors'] = true;
+  }
+
+  bool _isExpanded(String groupName) {
+    return _expandedGroups[groupName] ?? true;
+  }
+
+  void _toggleGroup(String groupName) {
+    setState(() {
+      _expandedGroups[groupName] = !(_expandedGroups[groupName] ?? true);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Design Tokens',
-            style: AppTextStylesWeb.h1.copyWith(color: themeProvider.textPrimary),
-          ),
-          const SizedBox(height: 32),
-          _buildColorsSection(),
-          const SizedBox(height: 32),
-          _buildSpacingSection(),
-          const SizedBox(height: 32),
-          _buildTypographySection(),
-          const SizedBox(height: 32),
-          _buildThemeTokensSection(),
-        ],
+    return Container(
+      decoration: BoxDecoration(
+        gradient: widget.themeProvider.isDarkMode
+            ? LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  widget.themeProvider.backgroundColor,
+                  widget.themeProvider.backgroundColor.withOpacity(0.95),
+                ],
+              )
+            : null,
+      ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок страницы
+            _buildPageHeader(),
+            const SizedBox(height: 40),
+            _buildColorsSection(),
+            const SizedBox(height: 48),
+            _buildSpacingSection(),
+            const SizedBox(height: 48),
+            _buildTypographySection(),
+            const SizedBox(height: 48),
+            _buildThemeTokensSection(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPageHeader() {
+    return Text(
+      'Дизайн-токены',
+      style: AppTextStylesWeb.h1.copyWith(
+        color: widget.themeProvider.textPrimary,
+        fontSize: 36,
+        fontWeight: FontWeight.w700,
       ),
     );
   }
 
   Widget _buildColorsSection() {
-    final isDarkMode = themeProvider.isDarkMode;
+    final isDarkMode = widget.themeProvider.isDarkMode;
     
     return _buildSection(
-      'Colors',
+      'Палитра',
       [
         // В светлой теме отображаем черные цвета, в темной - белые
         if (!isDarkMode) // Светлая тема - показываем черные цвета
@@ -112,7 +169,7 @@ class TokensPage extends StatelessWidget {
 
   Widget _buildSpacingSection() {
     return _buildSection(
-      'Spacing',
+      'Отступы',
       [
         _buildTokenItem('spacing0', AppSpacing.spacing0.toString()),
         _buildTokenItem('spacing4', AppSpacing.spacing4.toString()),
@@ -136,7 +193,7 @@ class TokensPage extends StatelessWidget {
 
   Widget _buildTypographySection() {
     return _buildSection(
-      'Typography',
+      'Шрифты',
       [
         _buildTokenGroup('Font Family', [
           ('fontSans', AppTypography.fontSans),
@@ -166,30 +223,30 @@ class TokensPage extends StatelessWidget {
 
   Widget _buildThemeTokensSection() {
     return _buildSection(
-      'Theme Tokens',
+      'Токены',
       [
         _buildTokenGroup('Text Colors', [
-          ('textPrimary', themeProvider.textPrimary),
-          ('textSecondary', themeProvider.textSecondary),
-          ('textDisabled', themeProvider.isDarkMode 
+          ('textPrimary', widget.themeProvider.textPrimary),
+          ('textSecondary', widget.themeProvider.textSecondary),
+          ('textDisabled', widget.themeProvider.isDarkMode 
               ? AppThemeDarkTokens.textDisabled 
               : AppThemeLightTokens.textDisabled),
-          ('textAccent', themeProvider.isDarkMode 
+          ('textAccent', widget.themeProvider.isDarkMode 
               ? AppThemeDarkTokens.textAccent 
               : AppThemeLightTokens.textAccent),
-          ('textCritical', themeProvider.isDarkMode 
+          ('textCritical', widget.themeProvider.isDarkMode 
               ? AppThemeDarkTokens.textCritical 
               : AppThemeLightTokens.textCritical),
-          ('textCaution', themeProvider.isDarkMode 
+          ('textCaution', widget.themeProvider.isDarkMode 
               ? AppThemeDarkTokens.textCaution 
               : AppThemeLightTokens.textCaution),
-          ('textSuccess', themeProvider.isDarkMode 
+          ('textSuccess', widget.themeProvider.isDarkMode 
               ? AppThemeDarkTokens.textSuccess 
               : AppThemeLightTokens.textSuccess),
         ]),
         _buildTokenGroup('Border Colors', [
-          ('borderPrimary', themeProvider.borderPrimary),
-          ('borderSecondary', themeProvider.isDarkMode 
+          ('borderPrimary', widget.themeProvider.borderPrimary),
+          ('borderSecondary', widget.themeProvider.isDarkMode 
               ? AppThemeDarkTokens.borderSecondary 
               : AppThemeLightTokens.borderSecondary),
         ]),
@@ -201,57 +258,296 @@ class TokensPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: AppTextStylesWeb.h2.copyWith(color: themeProvider.textPrimary),
+        Container(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 4,
+                height: 24,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFF454DE7),
+                      Color(0xFF6B73FF),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: AppTextStylesWeb.h2.copyWith(
+                  color: widget.themeProvider.textPrimary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         ...children,
       ],
     );
   }
 
   Widget _buildTokenGroup(String groupName, List<(String, dynamic)> tokens) {
+    final isExpanded = _isExpanded(groupName);
+    
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-        color: themeProvider.backgroundColor,
-        borderRadius: BorderRadius.circular(8),
+        color: widget.themeProvider.isDarkMode
+            ? widget.themeProvider.surfaceNeutralHigh
+            : Colors.white,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: themeProvider.borderPrimary,
+          color: widget.themeProvider.borderPrimary.withOpacity(0.15),
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(widget.themeProvider.isDarkMode ? 0.4 : 0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            groupName,
-            style: AppTextStylesWeb.bodyBold.copyWith(
-              color: themeProvider.textPrimary,
+          InkWell(
+            onTap: () => _toggleGroup(groupName),
+            borderRadius: isExpanded
+                ? const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  )
+                : BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: isExpanded
+                    ? const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      )
+                    : BorderRadius.circular(16),
+                border: isExpanded
+                    ? Border(
+                        bottom: BorderSide(
+                          color: widget.themeProvider.borderPrimary.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      )
+                    : null,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF454DE7).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      groupName,
+                      style: AppTextStylesWeb.bodyBold.copyWith(
+                        color: const Color(0xFF454DE7),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  AnimatedRotation(
+                    turns: isExpanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: widget.themeProvider.isDarkMode
+                          ? AppColors.blackMain
+                          : widget.themeProvider.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 12),
-          ...tokens.map((token) => _buildTokenRow(token.$1, token.$2)),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            child: isExpanded
+                ? Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: tokens.map((token) => _buildTokenCard(token.$1, token.$2)).toList(),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildTokenItem(String name, String value) {
+    // Пытаемся извлечь числовое значение для визуализации отступа
+    final spacingMatch = RegExp(r'(\d+(?:\.\d+)?)').firstMatch(value);
+    double? spacingValue;
+    if (spacingMatch != null) {
+      spacingValue = double.tryParse(spacingMatch.group(1) ?? '');
+    }
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: themeProvider.backgroundColor,
-        borderRadius: BorderRadius.circular(8),
+        color: widget.themeProvider.isDarkMode
+            ? widget.themeProvider.surfaceNeutralHigh
+            : Colors.white,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: themeProvider.borderPrimary,
+          color: widget.themeProvider.borderPrimary.withOpacity(0.2),
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(widget.themeProvider.isDarkMode ? 0.2 : 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: _buildTokenRow(name, value),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildTokenRow(name, value),
+          ),
+          if (spacingValue != null && spacingValue > 0) ...[
+            const SizedBox(width: 16),
+            Container(
+              width: spacingValue.clamp(0.0, 200.0),
+              height: 24,
+              decoration: BoxDecoration(
+                color: const Color(0xFF454DE7).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  color: const Color(0xFF454DE7).withOpacity(0.4),
+                  width: 1,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTokenCard(String name, dynamic value) {
+    String displayValue;
+    Color? colorValue;
+
+    if (value is Color) {
+      colorValue = value;
+      displayValue = _getColorHexWithAlpha(value);
+    } else {
+      displayValue = value.toString();
+    }
+
+    // Определяем, нужна ли контрастная граница для светлых цветов
+    final isLightColor = colorValue != null && 
+        (colorValue.computeLuminance() > 0.5 || 
+         (colorValue.alpha < 255 && colorValue.computeLuminance() > 0.3));
+
+    return Container(
+      width: 180,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: widget.themeProvider.isDarkMode
+            ? widget.themeProvider.surfaceNeutralHigh
+            : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: widget.themeProvider.borderPrimary.withOpacity(0.15),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(widget.themeProvider.isDarkMode ? 0.4 : 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (colorValue != null) ...[
+            Container(
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
+                color: colorValue,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: isLightColor 
+                      ? Colors.black.withOpacity(0.15)
+                      : widget.themeProvider.borderPrimary.withOpacity(0.2),
+                  width: isLightColor ? 2 : 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+          Text(
+            name,
+            style: AppTextStylesWeb.bodyMedium.copyWith(
+              color: widget.themeProvider.isDarkMode
+                  ? Colors.black
+                  : widget.themeProvider.textPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: widget.themeProvider.isDarkMode
+                  ? widget.themeProvider.surfaceNeutralMedium
+                  : widget.themeProvider.surfaceNeutralLow,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(
+              displayValue,
+              style: AppTextStylesWeb.smallRegular.copyWith(
+                color: widget.themeProvider.isDarkMode
+                    ? Colors.black87
+                    : widget.themeProvider.textSecondary,
+                fontFamily: 'Roboto Mono',
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -266,41 +562,70 @@ class TokensPage extends StatelessWidget {
       displayValue = value.toString();
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              name,
-              style: AppTextStylesWeb.bodyRegular.copyWith(
-                color: themeProvider.textPrimary,
-              ),
+    // Определяем, нужна ли контрастная граница для светлых цветов
+    final isLightColor = colorValue != null && 
+        (colorValue.computeLuminance() > 0.5 || 
+         (colorValue.alpha < 255 && colorValue.computeLuminance() > 0.3));
+
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            name,
+            style: AppTextStylesWeb.bodyRegular.copyWith(
+              color: widget.themeProvider.isDarkMode
+                  ? Colors.black
+                  : widget.themeProvider.textPrimary,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          if (colorValue != null) ...[
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: colorValue,
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(
-                  color: themeProvider.borderPrimary,
-                  width: 1,
-                ),
+        ),
+        if (colorValue != null) ...[
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: colorValue,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: isLightColor 
+                    ? Colors.black.withOpacity(0.3)
+                    : widget.themeProvider.borderPrimary.withOpacity(0.3),
+                width: isLightColor ? 2 : 1,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-          ],
-          Text(
+          ),
+          const SizedBox(width: 16),
+        ],
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: widget.themeProvider.isDarkMode
+                ? widget.themeProvider.surfaceNeutralMedium
+                : widget.themeProvider.surfaceNeutralLow,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: widget.themeProvider.borderPrimary.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: Text(
             displayValue,
             style: AppTextStylesWeb.smallRegular.copyWith(
-              color: themeProvider.textSecondary,
+              color: widget.themeProvider.textSecondary,
+              fontFamily: 'Roboto Mono',
+              fontSize: 12,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
