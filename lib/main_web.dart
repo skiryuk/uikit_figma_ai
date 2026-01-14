@@ -28,11 +28,12 @@ class _WebAppState extends State<WebApp> {
           brightness: brightness,
         );
 
-        // Используем Google Fonts для веба - это гарантированно работает
+        // Используем Google Fonts для веба
         final textTheme = GoogleFonts.robotoTextTheme();
         
         return MaterialApp(
           title: 'Design Tokens & Components',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: brightness,
             scaffoldBackgroundColor: _themeProvider.backgroundColor,
