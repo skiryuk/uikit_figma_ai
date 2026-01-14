@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_text_styles_web.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_theme_tokens.dart';
 
 /// Вариант состояния кнопки
 enum UiButtonState {
@@ -53,8 +53,12 @@ enum UiButtonRole {
   circle,
 }
 
-/// Компонент кнопки с различными вариантами представления
+/// Компонент кнопки с различными вариантами
 class UiButton extends StatelessWidget {
+
+  /// Провайдер темы (для адаптации цветов)
+  final AppThemeProvider? themeProvider;
+
   /// Текст кнопки
   final String? text;
 
@@ -81,9 +85,6 @@ class UiButton extends StatelessWidget {
 
   /// Форма кнопки
   final UiButtonRole role;
-
-  /// Провайдер темы (для адаптации цветов)
-  final AppThemeProvider? themeProvider;
 
   const UiButton({
     super.key,
@@ -179,19 +180,21 @@ class UiButton extends StatelessWidget {
 
   /// Получить цвета кнопки в зависимости от типа и стиля
   _ButtonColors _getButtonColors(bool isDisabled) {
+    final isDark = themeProvider?.isDarkMode ?? false;
+
     if (isDisabled) {
       return _ButtonColors(
         backgroundColor: style == UiButtonStyle.main
-            ? (themeProvider?.isDarkMode ?? false
-                ? AppColors.white300
-                : AppColors.black300)
+            ? (isDark
+                ? AppThemeDarkTokens.surfaceNeutralMedium
+                : AppThemeLightTokens.surfaceNeutralMedium)
             : Colors.transparent,
-        textColor: themeProvider?.isDarkMode ?? false
-            ? AppColors.white400
-            : AppColors.black400,
-        borderColor: themeProvider?.isDarkMode ?? false
-            ? AppColors.white300
-            : AppColors.black300,
+        textColor: isDark
+            ? AppThemeDarkTokens.textDisabled
+            : AppThemeLightTokens.textDisabled,
+        borderColor: isDark
+            ? AppThemeDarkTokens.borderSecondary
+            : AppThemeLightTokens.borderSecondary,
       );
     }
 
@@ -201,54 +204,93 @@ class UiButton extends StatelessWidget {
 
     switch (type) {
       case UiButtonType.accent:
-        backgroundColor = style == UiButtonStyle.main
-            ? AppColors.blueMain
-            : Colors.transparent;
-        textColor = style == UiButtonStyle.main
-            ? AppColors.whiteMain
-            : AppColors.blueMain;
-        borderColor = AppColors.blueMain;
+        if (style == UiButtonStyle.main) {
+          backgroundColor = state == UiButtonState.hover
+              ? (isDark
+                  ? AppThemeDarkTokens.bgAccentHover
+                  : AppThemeLightTokens.bgAccentHover)
+              : (isDark
+                  ? AppThemeDarkTokens.bgAccent
+                  : AppThemeLightTokens.bgAccent);
+          textColor = isDark
+              ? AppThemeDarkTokens.textPrimaryOnColor
+              : AppThemeLightTokens.textPrimaryOnColor;
+        } else {
+          backgroundColor = Colors.transparent;
+          textColor = isDark
+              ? AppThemeDarkTokens.textAccent
+              : AppThemeLightTokens.textAccent;
+        }
+        borderColor = isDark
+            ? AppThemeDarkTokens.bgAccent
+            : AppThemeLightTokens.bgAccent;
         break;
       case UiButtonType.neutral:
-        backgroundColor = style == UiButtonStyle.main
-            ? (themeProvider?.isDarkMode ?? false
-                ? AppColors.white300
-                : AppColors.black300)
-            : Colors.transparent;
-        textColor = themeProvider?.isDarkMode ?? false
-            ? AppColors.whiteMain
-            : AppColors.blackMain;
-        borderColor = themeProvider?.isDarkMode ?? false
-            ? AppColors.white300
-            : AppColors.black300;
+        if (style == UiButtonStyle.main) {
+          backgroundColor = state == UiButtonState.hover
+              ? (isDark
+                  ? AppThemeDarkTokens.bgSecondaryHover
+                  : AppThemeLightTokens.bgSecondaryHover)
+              : (isDark
+                  ? AppThemeDarkTokens.bgSecondary
+                  : AppThemeLightTokens.bgSecondary);
+          textColor = isDark
+              ? AppThemeDarkTokens.textPrimary
+              : AppThemeLightTokens.textPrimary;
+        } else {
+          backgroundColor = Colors.transparent;
+          textColor = isDark
+              ? AppThemeDarkTokens.textPrimary
+              : AppThemeLightTokens.textPrimary;
+        }
+        borderColor = isDark
+            ? AppThemeDarkTokens.borderPrimary
+            : AppThemeLightTokens.borderPrimary;
         break;
       case UiButtonType.success:
-        backgroundColor = style == UiButtonStyle.main
-            ? AppColors.greenMain
-            : Colors.transparent;
-        textColor = style == UiButtonStyle.main
-            ? AppColors.whiteMain
-            : AppColors.greenMain;
-        borderColor = AppColors.greenMain;
+        if (style == UiButtonStyle.main) {
+          backgroundColor = state == UiButtonState.hover
+              ? (isDark
+                  ? AppThemeDarkTokens.surfaceSuccessHover
+                  : AppThemeLightTokens.surfaceSuccessHover)
+              : (isDark
+                  ? AppThemeDarkTokens.surfaceSuccessMain
+                  : AppThemeLightTokens.surfaceSuccessMain);
+          textColor = isDark
+              ? AppThemeDarkTokens.textPrimaryOnColor
+              : AppThemeLightTokens.textPrimaryOnColor;
+        } else {
+          backgroundColor = Colors.transparent;
+          textColor = isDark
+              ? AppThemeDarkTokens.textSuccess
+              : AppThemeLightTokens.textSuccess;
+        }
+        borderColor = isDark
+            ? AppThemeDarkTokens.surfaceSuccessMain
+            : AppThemeLightTokens.surfaceSuccessMain;
         break;
       case UiButtonType.critical:
-        backgroundColor = style == UiButtonStyle.main
-            ? AppColors.redMain
-            : Colors.transparent;
-        textColor = style == UiButtonStyle.main
-            ? AppColors.whiteMain
-            : AppColors.redMain;
-        borderColor = AppColors.redMain;
+        if (style == UiButtonStyle.main) {
+          backgroundColor = state == UiButtonState.hover
+              ? (isDark
+                  ? AppThemeDarkTokens.surfaceCriticalHover
+                  : AppThemeLightTokens.surfaceCriticalHover)
+              : (isDark
+                  ? AppThemeDarkTokens.surfaceCriticalMain
+                  : AppThemeLightTokens.surfaceCriticalMain);
+          textColor = isDark
+              ? AppThemeDarkTokens.textPrimaryOnColor
+              : AppThemeLightTokens.textPrimaryOnColor;
+        } else {
+          backgroundColor = Colors.transparent;
+          textColor = isDark
+              ? AppThemeDarkTokens.textCritical
+              : AppThemeLightTokens.textCritical;
+        }
+        borderColor = isDark
+            ? AppThemeDarkTokens.surfaceCriticalMain
+            : AppThemeLightTokens.surfaceCriticalMain;
         break;
-    }
-
-    // Hover state - немного затемняем фон
-    if (state == UiButtonState.hover && style == UiButtonStyle.main) {
-      backgroundColor = Color.lerp(
-        backgroundColor,
-        AppColors.blackMain,
-        0.1,
-      )!;
     }
 
     return _ButtonColors(
